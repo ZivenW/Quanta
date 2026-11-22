@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>QUANTA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#F4F8FF;--surf:#fff;--ink:#0B1B3A;--mute:#5A6B88;--line:#DCE6F5;--pri:#1E6BFF;--acc:#FFB020;--ok:#12B76A;--bad:#E5484D;--d:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;--b:"Instrument Sans",system-ui,sans-serif;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0B1426;--surf:#121D36;--ink:#E8EEFB;--mute:#98A8C6;--line:#24335A;--pri:#5B9BFF;--ok:#3DD68C;--bad:#FF7A7F}}
+:root[data-theme="dark"]{--bg:#0B1426;--surf:#121D36;--ink:#E8EEFB;--mute:#98A8C6;--line:#24335A;--pri:#5B9BFF;--ok:#3DD68C;--bad:#FF7A7F}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.65 var(--b)}
+h1,h2,h3{font-family:var(--d);margin:0}
+h2{font-size:26px;line-height:1.25;margin:10px 0 14px}
+h3{font-size:18px;margin-bottom:6px}
+button{font-family:var(--b)}
+:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.btn{background:var(--pri);color:#fff;border:0;border-radius:14px;padding:13px 24px;font:600 16px var(--b);cursor:pointer;box-shadow:0 4px 0 color-mix(in srgb,var(--pri) 62%,#000);transition:transform .1s,box-shadow .1s}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 color-mix(in srgb,var(--pri) 62%,#000)}
+.btn:disabled{opacity:.45;cursor:default}
+.btn.ghost{background:var(--surf);color:var(--ink);border:2px solid var(--line);box-shadow:0 3px 0 var(--line);padding:10px 18px}
+#land{position:fixed;inset:0;background:#060B1F;color:#EAF1FF;display:grid;place-items:center;z-index:20;transition:opacity .6s}
+#land.gone{opacity:0;pointer-events:none}
+#stars{position:absolute;inset:0;width:100%;height:100%}
+.lc{position:relative;text-align:center;padding:20px;transition:transform .95s cubic-bezier(.7,0,1,.5),opacity .95s,filter .95s}
+.lc.suck{transform:scale(.03);opacity:0;filter:blur(8px)}
+.lc h1{font-weight:800;font-size:clamp(46px,10vw,92px);line-height:1;letter-spacing:.14em;margin:8px 0 6px}
+.lc p{color:#A9BCE6;margin:0 0 30px;font-size:18px}
+.lg svg{width:100%;height:100%;overflow:visible}
+.lc .lg{width:124px;height:124px;margin:0 auto}
+.go{background:var(--acc);color:#1B1300;border:0;border-radius:999px;padding:16px 42px;font:700 19px var(--b);cursor:pointer;animation:pulse 2.4s infinite}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(255,176,32,.55)}70%,100%{box-shadow:0 0 0 22px rgba(255,176,32,0)}}
+.lgb{background:transparent;color:inherit;border:1px solid currentColor;border-radius:999px;padding:5px 14px;font:600 13px var(--b);cursor:pointer;opacity:.8}
+.lc .lgb{display:block;margin:26px auto 0;color:#A9BCE6}
+.orb{transform-box:view-box;transform-origin:50px 50px;animation:spin 5s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#app.rise{animation:rise .8s cubic-bezier(.2,.8,.2,1)}
+@keyframes rise{from{opacity:0;transform:scale(1.06)}to{opacity:1;transform:none}}
+header{display:flex;align-items:center;gap:16px;max-width:820px;margin:0 auto;padding:16px 20px}
+.brand{display:flex;align-items:center;gap:8px;font:800 20px var(--d);letter-spacing:.08em}
+.brand .lg{width:34px;height:34px}
+#prog{flex:1;height:12px;border-radius:99px;background:var(--line);overflow:hidden}
+#prog i{display:block;height:100%;width:0;background:var(--ok);border-radius:99px;transition:width .7s cubic-bezier(.2,.8,.2,1)}
+main{max-width:820px;margin:0 auto;padding:6px 20px 170px}
+.chip{display:inline-block;background:var(--surf);border:2px solid var(--line);border-radius:99px;padding:2px 14px;font-size:14px;font-weight:600;margin:0 6px 4px 0;color:var(--mute)}
+.blk{background:var(--surf);border:2px solid var(--line);border-radius:18px;padding:18px 22px;margin:14px 0}
+.blk p{margin:0}
+.chal{border-left:6px solid var(--acc)}
+.babs{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+.bab{display:grid;grid-template-columns:48px 1fr auto;gap:14px;align-items:center;background:var(--surf);border:2px solid var(--line);border-radius:18px;padding:14px 18px}
+.bab .n{width:48px;height:48px;border-radius:50%;display:grid;place-items:center;font:800 18px var(--d);background:var(--line);color:var(--mute)}
+.bab.open .n{background:var(--pri);color:#fff}
+.bab.done .n{background:var(--ok);color:#fff}
+.bab.lock,.bab.soon{opacity:.55}
+.tg{font-size:14px;color:var(--mute)}
+.opts{display:grid;gap:12px;margin:18px 0}
+.opt{text-align:left;font:500 17px var(--b);color:var(--ink);background:var(--surf);border:2px solid var(--line);box-shadow:0 3px 0 var(--line);border-radius:14px;padding:14px 18px;cursor:pointer;transition:transform .1s,border-color .2s,background .3s}
+.opt:hover:not(:disabled){border-color:var(--pri)}
+.opt:active:not(:disabled){transform:translateY(3px);box-shadow:none}
+.opt:disabled{cursor:default}
+.opt.right{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 16%,var(--surf))}
+.opt.wrong{border-color:var(--bad);background:color-mix(in srgb,var(--bad) 14%,var(--surf));animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.numrow{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:18px 0}
+.numrow input,.chat input{font:600 18px var(--b);padding:12px 14px;border:2px solid var(--line);border-radius:14px;background:var(--surf);color:var(--ink);width:160px}
+.chat{display:flex;gap:10px;margin-top:10px}.chat input{flex:1;width:auto;font-weight:500;font-size:16px}
+.help{margin:6px 0 14px}.help small{color:var(--mute)}
+.hn{background:color-mix(in srgb,var(--acc) 18%,var(--surf));border-radius:12px;padding:8px 14px;margin:10px 0 0}
+.fb{margin-top:10px}.fb .btn{margin-top:12px}
+.g{color:var(--ok)}.r{color:var(--bad)}
+.tag{font-size:14px;color:var(--mute);margin:8px 0 0}
+#sim canvas{display:block;width:100%;aspect-ratio:5/3;border-radius:14px;background:color-mix(in srgb,var(--pri) 6%,var(--surf));border:2px solid var(--line);touch-action:none;cursor:grab}
+.sl{display:grid;grid-template-columns:34px 1fr 62px;gap:8px;align-items:center;font-size:14px;margin:6px 0}
+input[type=range]{width:100%;accent-color:var(--pri)}
+#cat{position:fixed;left:14px;bottom:calc(14px + env(safe-area-inset-bottom,0px));display:flex;align-items:flex-end;gap:8px;z-index:5;max-width:calc(100vw - 28px);pointer-events:none}
+#cat>svg{width:84px;flex:none;animation:bob 3.2s ease-in-out infinite}
+#cat.hop>svg{animation:hop .7s}
+@keyframes bob{50%{transform:translateY(-4px)}}
+@keyframes hop{0%{transform:translateY(0);animation-timing-function:cubic-bezier(.2,.6,.4,1)}45%{transform:translateY(-34px);animation-timing-function:cubic-bezier(.6,0,.8,.4)}100%{transform:translateY(0)}}
+.eyes{transform-box:fill-box;transform-origin:center;animation:blink 4.5s infinite}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+#bub{background:var(--surf);border:2px solid var(--line);border-radius:16px 16px 16px 4px;padding:10px 14px;font-size:14px;line-height:1.45;max-width:min(300px,62vw);opacity:0;transform:translateY(6px) scale(.96);transition:opacity .25s,transform .25s;margin-bottom:26px}
+#bub.on{opacity:1;transform:none}
+.cert{position:relative;max-width:640px;margin:16px auto;background:linear-gradient(160deg,#fff,#FFF6DF);color:#0B1B3A;border-radius:18px;overflow:hidden;aspect-ratio:10/7;display:grid;place-items:center;text-align:center;box-shadow:0 14px 40px rgba(30,107,255,.18)}
+.frame{position:absolute;inset:0;width:100%;height:100%}
+.frame rect{fill:none;stroke:#FFB020;stroke-width:3;vector-effect:non-scaling-stroke;stroke-dasharray:1;stroke-dashoffset:1;animation:draw 1.8s .2s ease-out forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+.cert::after{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 40%,rgba(255,255,255,.7) 50%,transparent 60%);transform:translateX(-120%);animation:shine 3s 1s ease-in-out infinite}
+@keyframes shine{to{transform:translateX(120%)}}
+.ci{position:relative;padding:18px;z-index:1}
+.ci p{margin:2px 0;color:#4A5B7A;font-size:14px}.ci h2{margin:0 0 4px;font-size:clamp(20px,4vw,30px)}.ci h3{font-size:clamp(17px,3vw,22px)}
+.cl{width:62px;height:62px;margin:0 auto 4px}
+.nm{font:800 clamp(24px,5vw,36px) var(--d);border-bottom:2px dashed #FFB020;padding:0 14px;display:inline-block;min-width:200px;margin:4px 0}
+.row{text-align:center;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+#cf{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:15}
+@media print{header,#cat,.row,#land{display:none}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div id="land">
+<canvas id="stars" aria-hidden="true"></canvas>
+<div class="lc"><div class="lg"></div><h1>QUANTA</h1><p data-i="tag"></p><button class="go" id="start" data-i="start"></button><button class="lgb"></button></div>
+</div>
+<div id="app" hidden>
+<header><div class="brand"><div class="lg"></div>QUANTA</div><div id="prog" role="progressbar"><i></i></div><button class="lgb"></button></header>
+<main id="view"></main>
+<div id="cat"><div id="bub" aria-live="polite"></div></div>
+<canvas id="cf" aria-hidden="true"></canvas>
+</div>
+<script>
+const $=s=>document.querySelector(s),rm=matchMedia('(prefers-reduced-motion:reduce)');
+const UI={
+id:{tag:'Belajar Fisika, selangkah demi selangkah.',start:'Yuk mulai',next:'Lanjut',check:'Periksa',pre:'Tes awal',prac:'Latihan kilat',post:'Tes akhir',lesson:'Materi',map:'Peta belajar',lock:'Terkunci',soon:'Segera hadir',open:'Terbuka',done:'Lulus',begin:'Mulai',cont:'Lanjutkan',askm:'Tanya Muon',send:'Kirim',ph:'Tulis pertanyaanmu…',num:'Isi angka dulu ya, misalnya 2,5',score:'Skor',retry:'Belum lulus kali ini. Yuk ulas materinya lagi, lalu coba tes akhir lagi.',certT:'Piagam Penghargaan',certP:'diberikan kepada',certD:'atas keberhasilan menamatkan',print:'Cetak / simpan PDF',back:'Kembali ke peta',left:'jatah tanya',simT:'Coba sendiri: seret muatan atau ubah nilainya.',ok:'Benar! Keren.',no:'Hampir! Lihat pembahasannya ya.',name:'Namamu',lvl:'Tingkat',unit:'Jawaban',h:'Petunjuk',noai:'Jatah tanya habis. Coba pikir dulu ya, kamu pasti bisa!',m_hi:'Hai! Aku Muon. Aku temani kamu belajar.',m_hard:'Soal ini susah? Tanya aku ya!',m_test:'Lagi tes, aku diam dulu ya.',m_yay:'Yeay, tepat sekali!',m_oops:'Tidak apa-apa, salah itu bagian dari belajar.',m_lesson:'Baca pelan-pelan, lalu mainkan simulasinya.',m_cert:'Kamu hebat! Ini piagammu.'},
+en:{tag:'Learn Physics, one step at a time.',start:"Let's go",next:'Continue',check:'Check',pre:'Pre-test',prac:'Quick practice',post:'Final test',lesson:'Lesson',map:'Learning map',lock:'Locked',soon:'Coming soon',open:'Open',done:'Passed',begin:'Start',cont:'Continue',askm:'Ask Muon',send:'Send',ph:'Type your question…',num:'Type a number first, like 2.5',score:'Score',retry:"Not quite this time. Review the lessons, then retake the final test.",certT:'Certificate of Achievement',certP:'awarded to',certD:'for completing',print:'Print / save as PDF',back:'Back to map',left:'questions left',simT:'Try it: drag the charges or change their values.',ok:'Correct! Nice.',no:'Close! Check the explanation.',name:'Your name',lvl:'Level',unit:'Answer',h:'Hint',noai:"You're out of questions. Give it another think, you've got this!",m_hi:"Hi! I'm Muon. I'll study with you.",m_hard:'Stuck on this one? Ask me!',m_test:"It's a test, so I'll stay quiet.",m_yay:'Yay, spot on!',m_oops:"It's okay, mistakes are how we learn.",m_lesson:'Read it slowly, then play with the simulation.',m_cert:"You're awesome! Here's your certificate."}};
+const LOGO='<svg viewBox="0 0 100 100" aria-label="QUANTA"><circle cx="50" cy="50" r="30" fill="none" stroke="#2D8CFF" stroke-width="9"/><path d="M66 66 L87 87" stroke="#2D8CFF" stroke-width="9" stroke-linecap="round"/><g class="orb"><circle cx="50" cy="20" r="7" fill="#FFB020"/></g></svg>';
+const CAT='<svg viewBox="0 0 120 110" aria-hidden="true"><polygon points="20,44 28,10 54,30" fill="#FFB86B"/><polygon points="100,44 92,10 66,30" fill="#FFB86B"/><polygon points="27,36 31,19 44,30" fill="#FF9DB0"/><polygon points="93,36 89,19 76,30" fill="#FF9DB0"/><ellipse cx="60" cy="64" rx="44" ry="38" fill="#FFB86B"/><path d="M52 30 L56 42 M60 28 L60 42 M68 30 L64 42" stroke="#E8923A" stroke-width="4" stroke-linecap="round"/><ellipse cx="60" cy="77" rx="22" ry="15" fill="#FFE4C4"/><g class="eyes"><ellipse cx="42" cy="62" rx="5.5" ry="8" fill="#1B1B2F"/><ellipse cx="78" cy="62" rx="5.5" ry="8" fill="#1B1B2F"/><circle cx="44" cy="59" r="2" fill="#fff"/><circle cx="80" cy="59" r="2" fill="#fff"/></g><circle cx="30" cy="76" r="6" fill="#FF9DB0" opacity=".6"/><circle cx="90" cy="76" r="6" fill="#FF9DB0" opacity=".6"/><polygon points="55,72 65,72 60,78" fill="#FF6F91"/><path d="M60 78 Q60 86 52 85 M60 78 Q60 86 68 85" fill="none" stroke="#1B1B2F" stroke-width="2.2" stroke-linecap="round"/><path d="M30 70 L10 66 M30 76 L9 78 M90 70 L110 66 M90 76 L111 78" stroke="#1B1B2F" stroke-width="1.6" stroke-linecap="round"/></svg>';
+const steps=b=>{const c=4*b,A=[c,c+1,c+2,c+3];return[{k:'pre',n:4,allowed:A},{k:'les',i:0},{k:'prac',n:2,allowed:A.slice(0,2)},{k:'les',i:1},{k:'prac',n:2,allowed:A.slice(2)},{k:'post',n:5,allowed:A},{k:'cert'}]};
+const fresh=()=>({lang:(navigator.language||'id').startsWith('id')?'id':'en',view:'map',bab:0,step:0,p:Array(20).fill(.3),n:Array(20).fill(0),q:0,ok:0,ai:3,dn:[],name:''});
+const load=()=>{try{const s=JSON.parse(localStorage.getItem('quanta.py.v1'));if(!(s&&s.p))return fresh();while(s.p.length<20){s.p.push(.3);s.n.push(0)}s.dn=s.dn||(s.done?[0]:[]);s.bab=s.bab|0;return s}catch(e){return fresh()}};
+const save=()=>{try{localStorage.setItem('quanta.py.v1',JSON.stringify(S))}catch(e){}};
+let S=load(),C=null,cur=null,hintN=0,raf=0,STEPS=steps(0);
+const t=k=>UI[S.lang][k],tr=o=>o[S.lang];
+const fmt=x=>{const a=Math.abs(x),s=a>=100?x.toFixed(0):a>=10?x.toFixed(1):x.toFixed(2);return S.lang==='id'?s.replace('.',','):s};
+const api=(u,b)=>fetch(u,b?{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}:{}).then(r=>r.json());
+function say(txt,ms){const b=$('#bub');b.textContent=txt;b.classList.toggle('on',!!txt);clearTimeout(say.t);if(ms)say.t=setTimeout(()=>b.classList.remove('on'),ms)}
+function hop(){const c=$('#cat');c.classList.remove('hop');void c.offsetWidth;c.classList.add('hop')}
+function applyLang(){document.documentElement.lang=S.lang;document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));document.querySelectorAll('.lgb').forEach(b=>b.textContent=S.lang==='id'?'EN':'ID')}
+function show(){
+applyLang();if(!C)return;STEPS=steps(S.bab);
+$('#prog i').style.width=(S.view==='map'?0:S.step/(STEPS.length-1)*100)+'%';
+if(S.view==='map')return map();
+const s=STEPS[S.step];
+if(s.k==='les')return lesson(s.i);
+if(s.k==='cert')return cert();
+return quiz(s)}
+function map(){
+$('#view').innerHTML=`<h2>${t('map')}</h2><ol class="babs">${C.babs.map((b,i)=>{
+const play=!!C.ch[i],dn=S.dn.includes(i),op=i===0||S.dn.includes(i-1),st=dn?'done':play&&op?'open':op?'soon':'lock',tag={done:t('done'),open:t('open'),soon:t('soon'),lock:t('lock')}[st];
+return`<li class="bab ${st}"><span class="n">${dn?'✓':i+1}</span><b>${tr(b)}</b>${play&&op?`<button class="btn gob" data-b="${i}">${dn?t('certT'):S.bab===i&&S.step>0?t('cont'):t('begin')}</button>`:`<span class="tg">${tag}</span>`}</li>`}).join('')}</ol>`;
+document.querySelectorAll('button.gob').forEach(b=>b.onclick=()=>{const i=+b.dataset.b;if(S.bab!==i){S.bab=i;S.step=0;S.q=0;S.ok=0}S.view='flow';STEPS=steps(S.bab);if(S.dn.includes(i))S.step=STEPS.length-1;save();show()});
+say(t('m_hi'),6000)}
+function lesson(i){
+const L=C.ch[S.bab][i];
+$('#view').innerHTML=`<span class="chip">${t('lesson')} ${i+1}/2</span><h2>${tr(L.title)}</h2>`+L.blocks.map(b=>`<section class="blk${b.c!==undefined?' chal':''}"><h3>${tr(b.h)}</h3><p>${tr(b.p)}</p></section>`).join('')+`<section class="blk"><h3>${t('simT')}</h3><div id="sim"></div></section><button class="btn" id="nx">${t('next')}</button>`;
+L.sim.g?simG($('#sim'),L.sim.g):L.sim.cur?simI($('#sim')):sim($('#sim'),L.sim);say(t('m_lesson'),6000);
+$('#nx').onclick=()=>{S.step++;S.q=0;S.ok=0;save();show();scrollTo(0,0)}}
+async function quiz(s){
+if(S.q>=s.n)return finish(s);
+cur=await api('/api/question',{p:S.p,n:S.n,allowed:s.allowed||[0,1,2,3],phase:s.k});hintN=0;renderQ(s)}
+function renderQ(s){
+const q=cur,lab={pre:t('pre'),prac:t('prac'),post:t('post')}[s.k];
+let h=`<span class="chip">${lab} ${S.q+1}/${s.n}</span><span class="chip">${t('lvl')} ${q.l}/4</span><h2>${tr(q.t)}</h2>`;
+if(q.kind==='mc')h+=`<div class="opts">${q.opts.map((o,i)=>`<button class="opt" data-i="${i}">${tr(o)}</button>`).join('')}</div>`;
+else h+=`<div class="numrow"><input id="ans" inputmode="decimal" autocomplete="off" aria-label="${t('unit')}"><b>${q.unit}</b><button class="btn" id="chk">${t('check')}</button></div>`;
+if(s.k==='prac')h+=`<div class="help"><button class="btn ghost" id="hb">${t('askm')}</button> <small>${S.ai} ${t('left')}</small><div id="hint"></div></div>`;
+$('#view').innerHTML=h+'<div class="fb" id="fb" role="status" aria-live="polite"></div>';
+document.querySelectorAll('.opt').forEach(b=>b.onclick=()=>submit(+b.dataset.i,s));
+const c=$('#chk');if(c){c.onclick=()=>submit(null,s);const a=$('#ans');a.onkeydown=e=>{if(e.key==='Enter')submit(null,s)};a.focus({preventScroll:true})}
+const hb=$('#hb');if(hb)hb.onclick=help;
+say(s.k==='prac'?t('m_hard'):t('m_test'),5000)}
+function help(){
+const box=$('#hint');
+if(hintN<2){box.insertAdjacentHTML('beforeend',`<p class="hn"><b>${t('h')} ${hintN+1}:</b> ${tr(cur.hints[hintN])}</p>`);say(tr(cur.hints[hintN]),7000);hintN++;return}
+if(!$('#ci')){box.insertAdjacentHTML('beforeend',`<div class="chat"><input id="ci" placeholder="${t('ph')}"><button class="btn" id="cs">${t('send')}</button></div><p id="cr" class="hn" hidden></p>`);$('#cs').onclick=sendAsk;$('#ci').onkeydown=e=>{if(e.key==='Enter')sendAsk()}}
+$('#ci').focus()}
+async function sendAsk(){
+const cr=$('#cr'),m=$('#ci').value.trim();if(!m)return;cr.hidden=false;
+if(S.ai<=0){cr.textContent=t('noai');return}
+cr.textContent='…';const r=await api('/api/ask',{question:tr(cur.t),msg:m,lang:S.lang});
+cr.textContent=r.text;say(r.text,9000);
+if(r.live){S.ai--;save();$('.help small').textContent=S.ai+' '+t('left')}}
+async function submit(i,s){
+if(cur.done)return;let v=i;
+if(cur.kind==='num'){v=$('#ans').value.trim();if(isNaN(parseFloat(v.replace(',','.')))){$('#fb').textContent=t('num');return}}
+cur.done=true;
+const r=await api('/api/answer',{qid:cur.qid,value:v,p:S.p[cur.c]});
+if(r.error){cur.done=false;if(r.error==='expired')show();return}
+S.p[cur.c]=r.p;S.n[cur.c]++;S.q++;if(r.ok)S.ok++;save();
+if(cur.kind==='mc')document.querySelectorAll('.opt').forEach((b,k)=>{b.disabled=true;if(k===r.ans)b.classList.add('right');else if(k===i)b.classList.add('wrong')});
+else{$('#ans').disabled=true;$('#chk').disabled=true}
+const last=S.q>=s.n;
+$('#fb').innerHTML=`<p><b class="${r.ok?'g':'r'}">${r.ok?t('ok'):t('no')}</b> ${cur.kind==='num'&&!r.ok?`${t('unit')}: ${fmt(r.ans)} ${cur.unit}. `:''}${tr(r.ex)}</p><button class="btn" id="nx">${t('next')}</button>`;
+$('#nx').onclick=()=>last?finish(s):show();$('#nx').focus();
+say(r.ok?t('m_yay'):t('m_oops'),4000);if(r.ok)hop()}
+function finish(s){
+if(s.k==='post'&&S.ok<4){
+$('#view').innerHTML=`<h2>${t('score')}: ${S.ok}/${s.n}</h2><p>${t('retry')}</p><button class="btn" id="rv">${t('lesson')}</button>`;
+$('#rv').onclick=()=>{S.step=1;S.q=0;S.ok=0;save();show()};say(t('m_oops'),5000);return}
+if(s.k==='post'&&!S.dn.includes(S.bab))S.dn.push(S.bab);
+S.step++;S.q=0;S.ok=0;save();show();scrollTo(0,0)}
+function cert(){
+$('#view').innerHTML=`<div class="cert"><svg class="frame" viewBox="0 0 400 280" preserveAspectRatio="none" aria-hidden="true"><rect x="6" y="6" width="388" height="268" rx="14" pathLength="1"/></svg><div class="ci"><div class="cl lg">${LOGO}</div><h2>${t('certT')}</h2><p>${t('certP')}</p><div class="nm" id="nm" contenteditable="true" spellcheck="false">${S.name||t('name')}</div><p>${t('certD')}</p><h3>${tr(C.babs[S.bab])}</h3><p>${new Date().toLocaleDateString(S.lang==='id'?'id-ID':'en-US',{dateStyle:'long'})}</p></div></div><div class="row"><button class="btn" id="pr">${t('print')}</button><button class="btn ghost" id="bk">${t('back')}</button></div>`;
+$('#nm').onblur=e=>{const v=e.target.textContent.trim();S.name=v===t('name')?'':v;save()};
+$('#pr').onclick=()=>print();$('#bk').onclick=()=>{S.view='map';save();show()};
+say(t('m_cert'),7000);hop();if(!rm.matches)confetti()}
+function confetti(){
+const c=$('#cf'),x=c.getContext('2d'),col=['#FFB020','#1E6BFF','#FF5A5F','#12B76A'];c.width=innerWidth;c.height=innerHeight;
+const P=Array.from({length:130},()=>({x:innerWidth/2,y:innerHeight*.35,vx:(Math.random()-.5)*950,vy:-Math.random()*950-150,r:Math.random()*6.28,w:(Math.random()-.5)*12,c:col[Math.floor(Math.random()*4)]}));
+let t0=performance.now();
+(function f(now){const dt=Math.min(.04,(now-t0)/1e3);t0=now;x.clearRect(0,0,c.width,c.height);let alive=0;
+for(const p of P){p.vy+=900*dt;p.vx*=1-1.2*dt;p.vy*=1-.6*dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.r+=p.w*dt;
+if(p.y<c.height+20){alive++;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-5,-2.5,10,5);x.restore()}}
+if(alive)requestAnimationFrame(f);else x.clearRect(0,0,c.width,c.height)})(t0)}
+/* Simulasi: seret muatan. Gaya Coulomb dan medan dihitung dengan fisika asli (k = 8,99×10⁹, 1 px = 50 cm / lebar kanvas). */
+function sim(box,o){
+box.innerHTML=`<canvas></canvas><div class="sl"><span>q₁</span><input type="range" min="-9" max="9" value="5" id="a1" aria-label="q1"><output id="v1">5 µC</output></div><div class="sl"><span>q₂</span><input type="range" min="-9" max="9" value="-4" id="a2" aria-label="q2"><output id="v2">-4 µC</output></div><p class="tag" id="ro"></p>`;
+const cv=box.querySelector('canvas'),x=cv.getContext('2d'),ch=[{x:.3,y:.58,q:5},{x:.7,y:.58,q:-4}],pr={x:.5,y:.2};let W,H,drag=null;
+const css=getComputedStyle(document.documentElement),K=89900;
+function arrow(x0,y0,a,L,col,wd){const x1=x0+Math.cos(a)*L,y1=y0+Math.sin(a)*L;x.strokeStyle=col;x.lineWidth=wd;x.beginPath();x.moveTo(x0,y0);x.lineTo(x1,y1);x.lineTo(x1-Math.cos(a-.45)*8,y1-Math.sin(a-.45)*8);x.moveTo(x1,y1);x.lineTo(x1-Math.cos(a+.45)*8,y1-Math.sin(a+.45)*8);x.stroke()}
+function draw(){
+const d=devicePixelRatio||1;W=cv.clientWidth;H=cv.clientHeight;if(cv.width!==Math.round(W*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d)}
+x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);x.lineCap='round';
+const P=ch.map(c=>({x:c.x*W,y:c.y*H,q:c.q})),cm=50/W,ink=css.getPropertyValue('--ink').trim(),pos='#FF5A5F',neg='#1E6BFF';
+const E=(px,py)=>{let ex=0,ey=0;for(const c of P){const dx=(px-c.x)*cm,dy=(py-c.y)*cm,r2=Math.max(dx*dx+dy*dy,4),r=Math.sqrt(r2);ex+=K*c.q*dx/(r2*r);ey+=K*c.q*dy/(r2*r)}return[ex,ey,Math.hypot(ex,ey)]};
+const V=(px,py)=>P.reduce((s,c)=>s+899*c.q/Math.max(Math.hypot((px-c.x)*cm,(py-c.y)*cm),2),0);
+for(let px=14;px<W;px+=28)for(let py=14;py<H;py+=28){
+if(P.some(c=>Math.hypot(px-c.x,py-c.y)<24))continue;
+if(o.volt){const v=V(px,py);x.globalAlpha=Math.min(.85,.12+Math.abs(v)/400);x.fillStyle=v>0?pos:neg;x.beginPath();x.arc(px,py,Math.min(9,2+Math.abs(v)/60),0,7);x.fill();continue}
+const[ex,ey,m]=E(px,py);if(!m)continue;const a=Math.atan2(ey,ex);
+x.globalAlpha=Math.min(.9,.12+.2*Math.log10(1+m/20));arrow(px-Math.cos(a)*6,py-Math.sin(a)*6,a,12,ink,1.4)}
+x.globalAlpha=1;let msg='';
+if(o.force){const a=P[0],b=P[1],dx=b.x-a.x,dy=b.y-a.y,dp=Math.hypot(dx,dy),dc=Math.max(dp*cm,2),F=89.9*Math.abs(a.q*b.q)/(dc*dc),s=Math.sign(a.q*b.q),u=Math.atan2(dy,dx);
+if(s){const L=Math.min(95,7*F+6),dir=s>0?u+Math.PI:u;arrow(a.x,a.y,dir,L,'#FFB020',3.5);arrow(b.x,b.y,dir+Math.PI,L,'#FFB020',3.5)}
+msg=s?`F = ${fmt(F)} N, ${s>0?(S.lang==='id'?'tolak-menolak':'repulsive'):(S.lang==='id'?'tarik-menarik':'attractive')}. ${S.lang==='id'?'Kedua gaya sama besar, berlawanan arah.':'Both forces are equal and opposite.'}`:(S.lang==='id'?'Salah satu muatan nol: tidak ada gaya.':'One charge is zero: no force.')}
+if(o.probe){const px=pr.x*W,py=pr.y*H,[ex,ey,m]=E(px,py);
+if(m&&!o.volt){arrow(px,py,Math.atan2(ey,ex),Math.min(95,22+18*Math.log10(1+m/10)),'#FFB020',3.5)}
+x.fillStyle='#FFB020';x.strokeStyle=ink;x.lineWidth=2;x.beginPath();x.arc(px,py,7,0,7);x.fill();x.stroke();
+msg=o.volt?`V = ${fmt(V(px,py))} kV. ${S.lang==='id'?'Merah: potensial positif, biru: negatif. ':'Red: positive potential, blue: negative. '}`:`E = ${fmt(m)} kN/C. ${S.lang==='id'?'Seret titik kuning ke mana saja.':'Drag the yellow point anywhere.'}`}
+for(const c of P){x.fillStyle=c.q>0?pos:c.q<0?neg:'#8A96AA';x.beginPath();x.arc(c.x,c.y,13,0,7);x.fill();x.fillStyle='#fff';x.font='700 16px sans-serif';x.textAlign='center';x.textBaseline='middle';x.fillText(c.q>0?'+':c.q<0?'−':'0',c.x,c.y+1)}
+$('#ro').textContent=msg}
+const pos=e=>{const r=cv.getBoundingClientRect();return{x:(e.clientX-r.left)/r.width,y:(e.clientY-r.top)/r.height}};
+cv.onpointerdown=e=>{const p=pos(e),c=[...ch,...(o.probe?[pr]:[])].map(k=>({k,d:Math.hypot((k.x-p.x)*W,(k.y-p.y)*H)})).sort((a,b)=>a.d-b.d)[0];if(c.d<28){drag=c.k;cv.setPointerCapture(e.pointerId)}};
+cv.onpointermove=e=>{if(!drag)return;const p=pos(e);drag.x=Math.min(.96,Math.max(.04,p.x));drag.y=Math.min(.94,Math.max(.06,p.y));draw()};
+cv.onpointerup=()=>{drag=null};
+[1,2].forEach(n=>{$('#a'+n).oninput=e=>{ch[n-1].q=+e.target.value;$('#v'+n).textContent=e.target.value+' µC';draw()}});
+draw()}
+/* Simulasi arus: banyak elektron (n tetap) bergerak ke kiri dengan laju hanyut sebanding I; arus konvensional ke kanan. Q = I·t. */
+function simI(box){
+box.innerHTML=`<canvas></canvas><div class="sl"><span>I</span><input type="range" min="1" max="10" value="4" id="ai" aria-label="I"><output id="vi">4 A</output></div><p class="tag" id="ro"></p>`;
+const cv=box.querySelector('canvas'),x=cv.getContext('2d'),el=Array.from({length:14},(_,i)=>i/14);let I=4,tt=0,last=performance.now();
+$('#ai').oninput=e=>{I=+e.target.value;tt=0;$('#vi').textContent=I+' A'};
+function f(now){if(!box.isConnected)return;
+const d=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight,dt=Math.min(.05,(now-last)/1e3),y=H/2,ink=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();last=now;tt+=dt;
+if(cv.width!==Math.round(W*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d)}
+x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);
+x.fillStyle='rgba(120,140,170,.22)';x.fillRect(16,y-36,W-32,72);
+x.setLineDash([5,5]);x.strokeStyle=ink;x.globalAlpha=.4;x.beginPath();x.moveTo(W/2,y-46);x.lineTo(W/2,y+46);x.stroke();x.setLineDash([]);x.globalAlpha=1;
+x.fillStyle='#1E6BFF';
+el.forEach((u,i)=>{el[i]=((u-.05*I*dt)%1+1)%1;x.beginPath();x.arc(16+el[i]*(W-32),y+((i*7)%5-2)*13,5.5,0,7);x.fill()});
+x.fillStyle=ink;x.font='600 14px sans-serif';x.textAlign='center';
+x.fillText(S.lang==='id'?'arus konvensional →':'conventional current →',W/2,y-54);x.fillText(S.lang==='id'?'← gerak elektron (−)':'← electron motion (−)',W/2,y+66);
+$('#ro').textContent=`I = ${I} A, t = ${tt.toFixed(1).replace('.',S.lang==='id'?',':'.')} s, Q = I·t = ${fmt(I*tt)} C`;
+requestAnimationFrame(f)}
+requestAnimationFrame(f)}
+/* Simulasi bab 3 sampai 5: tiap jenis punya penggeser dan fungsi gambar; hasil dihitung dengan rumus yang diajarkan. */
+const L2=(a,b)=>S.lang==='id'?a:b;
+const arr=(x,x0,y0,x1,y1)=>{const a=Math.atan2(y1-y0,x1-x0);x.beginPath();x.moveTo(x0,y0);x.lineTo(x1,y1);x.lineTo(x1-Math.cos(a-.45)*8,y1-Math.sin(a-.45)*8);x.moveTo(x1,y1);x.lineTo(x1-Math.cos(a+.45)*8,y1-Math.sin(a+.45)*8);x.stroke()};
+const SG={
+ohm:{sl:[['L',1,10,5,'m',1],['A',1,10,2,'mm²',1],['ρ',1,10,2,'×10⁻⁸ Ω·m',1]],d(x,W,H,v,dt,ink){
+const R=10*v[2]*v[0]/v[1],I=500/R,w=20+v[0]*27,h=6+v[1]*4.5;
+x.fillStyle='#D98B4A';x.fillRect(24,H/2-h/2-20,w,h);x.fillStyle=ink;x.fillText('L',24+w/2,H/2-h/2-28);
+x.fillStyle='#1E6BFF';x.fillRect(24,H-46,(W-48)*Math.log10(1+I)/3,14);x.fillStyle=ink;x.fillText('I',14,H-35);
+return`R = ρL/A = ${fmt(R)} mΩ. ${L2('Pada 0,5 V, arus','At 0.5 V, the current is')} I = ${fmt(I)} A.`}},
+cap:{sl:[['A',10,100,50,'cm²',5],['d',1,10,2,'mm',1]],d(x,W,H,v,dt,ink){
+const C=.8854*v[0]/v[1],pw=40+v[0]*2.2,gap=18+v[1]*8,cx=W/2,y1=H/2-gap/2,y2=H/2+gap/2;
+x.fillStyle='#FF5A5F';x.fillRect(cx-pw/2,y1-8,pw,8);x.fillStyle='#1E6BFF';x.fillRect(cx-pw/2,y2,pw,8);
+for(let i=0;i<8;i++){const px=cx-pw/2+(i+.5)*pw/8;arr(x,px,y1+2,px,y2-2)}
+return`C = ε₀A/d = ${fmt(C)} pF. ${L2('Pada 12 V:','At 12 V:')} Q = ${fmt(C*12)} pC, U = ½CV² = ${fmt(C*.072)} nJ.`}},
+ser:{sl:[['R₁',1,20,6,'Ω',1],['R₂',1,20,3,'Ω',1],['0/1',0,1,0,'',1]],d(x,W,H,v,dt,ink){
+const a=v[0],b=v[1],w=W-48,V=12;let m;
+if(!v[2]){const R=a+b,I=V/R,v1=I*a,v2=I*b;x.fillStyle='#1E6BFF';x.fillRect(24,H/2-12,w*v1/V,24);x.fillStyle='#FF5A5F';x.fillRect(24+w*v1/V,H/2-12,w*v2/V,24);x.fillStyle=ink;x.fillText('V₁',24+w*v1/V/2,H/2-20);x.fillText('V₂',24+w*(v1+v2/2)/V,H/2-20);
+m=`${L2('Seri (0)','Series (0)')}: R = ${fmt(R)} Ω, I = ${fmt(I)} A, V₁ = ${fmt(v1)} V, V₂ = ${fmt(v2)} V.`}
+else{const I1=V/a,I2=V/b,I=I1+I2;x.fillStyle='#1E6BFF';x.fillRect(24,H/2-30,w*I1/12,22);x.fillStyle='#FF5A5F';x.fillRect(24,H/2+8,w*I2/12,22);x.fillStyle=ink;x.fillText('I₁',14,H/2-14);x.fillText('I₂',14,H/2+24);
+m=`${L2('Paralel (1)','Parallel (1)')}: R = ${fmt(V/I)} Ω, I = ${fmt(I)} A, I₁ = ${fmt(I1)} A, I₂ = ${fmt(I2)} A.`}
+return m+L2(' Baterai 12 V.',' 12 V battery.')}},
+rc:{sl:[['R',1,10,4,'kΩ',1],['C',1,10,5,'µF',1]],d(x,W,H,v,dt,ink,s){
+const tau=v[0]*v[1],X0=34,Y0=H-30,w=W-54,h=H-70,f=u=>u<5?1-Math.exp(-u):Math.exp(-(u-5));
+s.u=(s.u+dt*1.1)%10;
+x.globalAlpha=.4;x.beginPath();x.moveTo(X0,Y0-h);x.lineTo(X0,Y0);x.lineTo(X0+w,Y0);x.stroke();x.setLineDash([4,4]);x.beginPath();x.moveTo(X0,Y0-h*.632);x.lineTo(X0+w,Y0-h*.632);x.stroke();x.setLineDash([]);x.globalAlpha=1;
+x.strokeStyle='#1E6BFF';x.lineWidth=3;x.beginPath();for(let u=0;u<=10;u+=.1){const px=X0+w*u/10,py=Y0-h*f(u);u?x.lineTo(px,py):x.moveTo(px,py)}x.stroke();
+x.fillStyle='#FFB020';x.beginPath();x.arc(X0+w*s.u/10,Y0-h*f(s.u),7,0,7);x.fill();
+x.fillStyle=ink;x.fillText('63%',X0-16,Y0-h*.632+4);x.fillText('τ',X0+w/10,Y0+16);x.fillText('V_C',X0+12,Y0-h-6);
+return`τ = RC = ${fmt(tau)} ms. t = ${fmt(s.u*tau)} ms, V_C = ${fmt(12*f(s.u))} V. ${L2('Baterai 12 V: isi lalu kosongkan.','12 V battery: charge, then discharge.')}`}},
+mag:{sl:[['v',2,9,5,'×10⁶ m/s',1],['B',1,4,2,'mT',1],['q',-1,1,-1,'e',2]],d(x,W,H,v,dt,ink,s){
+const sp=v[0],B=v[1],q=v[2],r=5.686*sp/B,k=Math.min(2.2,(Math.min(W,H)/2-14)/51.2),rp=r*k,cx=W/2,cy=H/2;
+s.th+=q*1.759*B*dt;
+x.globalAlpha=.3;for(let gx=30;gx<W;gx+=34)for(let gy=26;gy<H;gy+=34)x.fillText('×',gx,gy);x.globalAlpha=.5;x.setLineDash([5,5]);x.beginPath();x.arc(cx,cy,rp,0,7);x.stroke();x.setLineDash([]);x.globalAlpha=1;
+const c=Math.cos(s.th),sn=Math.sin(s.th),px=cx+rp*c,py=cy-rp*sn;
+x.lineWidth=3;x.strokeStyle='#FFB020';arr(x,px,py,px-q*sn*34,py-q*c*34);x.strokeStyle='#12B76A';arr(x,px,py,px-c*34,py+sn*34);
+x.fillStyle=q>0?'#FF5A5F':'#1E6BFF';x.beginPath();x.arc(px,py,8,0,7);x.fill();
+return`r = mv/(qB) = ${fmt(r)} mm, T = 2πm/(qB) = ${fmt(35.7/B)} ns. ${L2('Kuning: v, hijau: F. Medan menembus layar (×). Waktu diperlambat 10⁸ kali.','Yellow: v, green: F. Field points into the screen (×). Time slowed 10⁸×.')}`}},
+wire:{sl:[['I₁',-10,10,6,'A',1],['I₂',-10,10,4,'A',1],['d',2,20,6,'cm',1]],d(x,W,H,v,dt,ink){
+const a=v[0],b=v[1],d=v[2],dp=Math.min(W-100,12*d),x1=W/2-dp/2,x2=W/2+dp/2;
+x.lineWidth=5;[[x1,a],[x2,b]].forEach(([px,i])=>{x.strokeStyle='#D98B4A';x.beginPath();x.moveTo(px,28);x.lineTo(px,H-28);x.stroke();if(i){const sg=Math.sign(i);x.strokeStyle=ink;x.lineWidth=2.5;arr(x,px,H/2+20*sg,px,H/2-20*sg);x.lineWidth=5}});
+if(!a||!b)return L2('Salah satu arus nol: tidak ada gaya.','One current is zero: no force.');
+const F=20*Math.abs(a*b)/d,att=a*b>0,Ln=12+14*Math.log10(1+F/10),dr=att?1:-1;
+x.strokeStyle='#FFB020';x.lineWidth=3;arr(x,x1,H/2-60,x1+dr*Ln,H/2-60);arr(x,x2,H/2-60,x2-dr*Ln,H/2-60);
+return`F/L = μ₀I₁I₂/(2πd) = ${fmt(F)} µN/m, ${att?L2('tarik-menarik (arus searah)','attractive (same direction)'):L2('tolak-menolak (arus berlawanan)','repulsive (opposite directions)')}.`}}};
+function simG(box,k){
+const g=SG[k],V=g.sl.map(a=>a[3]),s={th:0,u:0};
+box.innerHTML='<canvas></canvas>'+g.sl.map((a,i)=>`<div class="sl"><span>${a[0]}</span><input type="range" min="${a[1]}" max="${a[2]}" step="${a[5]}" value="${a[3]}" data-i="${i}" aria-label="${a[0]}"><output>${a[3]} ${a[4]}</output></div>`).join('')+'<p class="tag" id="ro"></p>';
+const cv=box.querySelector('canvas'),x=cv.getContext('2d');let last=performance.now();
+box.querySelectorAll('input').forEach(e=>e.oninput=()=>{const i=+e.dataset.i;V[i]=+e.value;e.nextElementSibling.textContent=e.value+' '+g.sl[i][4]});
+function f(now){if(!box.isConnected)return;
+const d=devicePixelRatio||1,W=cv.clientWidth,H=cv.clientHeight,dt=Math.min(.05,(now-last)/1e3),ink=getComputedStyle(document.documentElement).getPropertyValue('--ink').trim();last=now;
+if(cv.width!==Math.round(W*d)){cv.width=Math.round(W*d);cv.height=Math.round(H*d)}
+x.setTransform(d,0,0,d,0,0);x.clearRect(0,0,W,H);x.lineCap='round';x.lineWidth=2;x.strokeStyle=ink;x.fillStyle=ink;x.font='600 13px sans-serif';x.textAlign='center';
+$('#ro').textContent=g.d(x,W,H,V,dt,ink,s);requestAnimationFrame(f)}
+requestAnimationFrame(f)}
+/* Halaman awal: bintang bergerak pelan; saat tombol ditekan, semua bintang dipercepat ke pusat (percepatan konstan) */
+const st=$('#stars'),sx=st.getContext('2d');let stars=[],W0=0,H0=0,warp=0,t0=performance.now();
+function rs(){W0=st.width=innerWidth;H0=st.height=innerHeight;const R0=Math.hypot(W0,H0)/2;stars=Array.from({length:240},()=>({a:Math.random()*6.283,r:Math.random()*R0,s:Math.random()*1.6+.4,v:0}))}
+function loop(now){const dt=Math.min(.05,(now-t0)/1e3);t0=now;const cx=W0/2,cy=H0/2;
+sx.fillStyle=warp?'rgba(6,11,31,.22)':'#060B1F';sx.fillRect(0,0,W0,H0);
+for(const s of stars){
+if(warp){const r0=s.r;s.v+=1800*dt;s.r=Math.max(0,s.r-s.v*dt);sx.strokeStyle='rgba(190,215,255,.9)';sx.lineWidth=s.s;sx.beginPath();sx.moveTo(cx+Math.cos(s.a)*r0,cy+Math.sin(s.a)*r0);sx.lineTo(cx+Math.cos(s.a)*s.r,cy+Math.sin(s.a)*s.r);sx.stroke()}
+else{s.a+=.012*dt;sx.fillStyle=`rgba(200,220,255,${.4+.4*Math.sin(now/700+s.r)})`;sx.fillRect(cx+Math.cos(s.a)*s.r,cy+Math.sin(s.a)*s.r,s.s,s.s)}}
+raf=requestAnimationFrame(loop)}
+function enter(){$('#land').classList.add('gone');$('#app').hidden=false;$('#app').classList.add('rise');show();setTimeout(()=>{$('#land').hidden=true;cancelAnimationFrame(raf)},700)}
+$('#start').onclick=()=>{if(rm.matches)return enter();warp=1;$('.lc').classList.add('suck');setTimeout(enter,1250)};
+document.querySelectorAll('.lgb').forEach(b=>b.onclick=()=>{S.lang=S.lang==='id'?'en':'id';save();const s=STEPS[S.step];if(C&&S.view==='flow'&&cur&&!cur.done&&s.n&&s.k!=='les'){applyLang();renderQ(s)}else show()});
+document.querySelectorAll('.lg').forEach(e=>e.innerHTML=LOGO);
+$('#cat').insertAdjacentHTML('afterbegin',CAT);
+applyLang();rs();addEventListener('resize',rs);raf=requestAnimationFrame(loop);
+api('/api/bab1').then(c=>{C=c;if(!$('#app').hidden)show()}).catch(()=>{});
+</script>
+</body>
+</html>
